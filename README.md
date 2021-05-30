@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # hmsc
+=======
+# vuesc
+>>>>>>> origin/master
 
 ## Project setup
 ```
