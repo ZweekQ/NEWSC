@@ -8,6 +8,7 @@
 <!--      登录表单区-->
 
       <!--      用户名-->
+<!--     绑定ref通过$refs获取指定的表单对象,rules是验证表单的输入，model是双向绑定表单的输入数据-->
       <el-form ref="loginFormRef" label-width="0px" class="login_form" :model="loginForm" :rules="loginFormRules">
         <el-form-item prop="username">
           <el-input v-model="loginForm.username" prefix-icon="iconfont icon-user"></el-input>
@@ -62,26 +63,35 @@ export default {
 
     //登录验证 async异步
     login(){
+      //loginFormRef是表单的引用对象
+      //validate是提点击登录之后的回调函数,是预验证，验证表单输入的值是否合法，不是指向服务器发起请求验证，结果为true或者false，valid就是回调函数的结果
       this.$refs.loginFormRef.validate(async valid =>{
+        console.log(valid)
         if (!valid) return;
+
+        //发起异步请求，返回一个promise对象
         // this.$http.post("/login",this.loginForm).then(data => console.log(data.data))
+        //{data:ref}搭配await，简化相应的结果
         const {data:ref} = await this.$http.post("/login",this.loginForm)
+
+        //$message是登录或失败给出的弹窗提示，调用相应的方法弹出相应的提示内容
+        //ref.meta.status是获取请求之后的返回的结果(状态码),200表示失败
         if (ref.meta.status !== 200) return this.$message.error("登陆失败");
          this.$message.success("登陆成功")
         //登录成功之后将token保存到sessionStorage
         window.sessionStorage.setItem("token",ref.data.token)
         await this.$router.push("/home")
-
       })
     }
   }
 }
 </script>
 
+<!--scoped表示当前样式只在修饰当前-->
 <style lang="less" scoped>
 
   .login{
-    height:1080px;
+    height:100vh;
     background-color: #2c3e50;
   }
 

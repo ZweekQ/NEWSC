@@ -20,9 +20,24 @@ const routes = [
   }
 ]
 
+
 const router = new VueRouter({
   routes,
-  // mode:history
+  mode:'history'
 })
+
+//利用vue的导航守卫，在跳转之前，做出判断
+router.beforeEach((to,from,next) => {
+  /*
+  to:要跳转到的路由
+  from:跳转之前的路由
+  next：放行
+   */
+  if (to.path === '/login') return next();
+  const token = window.sessionStorage.getItem('token')
+  if(!token) return next('/login');
+  return next();
+})
+
 
 export default router
